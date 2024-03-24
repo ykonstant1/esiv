@@ -1,6 +1,21 @@
-/-!
-  © 2024 Ioannis Konstantoulas. All rights reserved.
+/-
+    © 2024 Ioannis Konstantoulas. All rights reserved.
 
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-/
+
+/-!
   This is a Lean implementation of the Sieve of Eratosthenes with wheel factorization using the
   primes 2, 3, and 5.  The 8 coprime classes modulo 2*3*5=30 are bitpacked into a ByteArray whose
   entry k and offset i represent the number 30*k + r(i), r(i) being the i-th coprime class in
@@ -14,11 +29,9 @@
   #eval Lean.versionString -- "4.7.0-rc2"
 -/
 
-/-- Convenient shorthand for making ByteArrays -/
 @[inline] private
 abbrev Array.toByteArray := ByteArray.mk
 
-/-- Unpack bitpacked logic -/
 @[inline] private
 abbrev UInt8.toBool (b : UInt8) :=
   ((b >>> 0) &&& 1 == 1,
@@ -71,9 +84,9 @@ abbrev UInt8.toMask : UInt8 → UInt8
   | 29 => 127
   | _  => 0
 
-/-- Update the entries of B by (b := B[k]) ↦ f(r,b) where k is the array entry
-    given by (i*j)/30 and r is the mod 30 class of (i*j) representing the bit-offset
-    in the entry. -/
+/-- Update the entries of B by (b := B[k]) ↦ f(r,b) where:
+      k is the array entry given by (i*j)/30,
+      r is the mod 30 class of (i*j) representing the bit-offset in the entry. -/
 @[inline, specialize] private partial
 def ByteArray.updateProgression (B : ByteArray) (i j N : Nat)
     (f : UInt8 → UInt8 → UInt8) : ByteArray :=
