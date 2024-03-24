@@ -1,4 +1,6 @@
 /-!
+  © 2024 Ioannis Konstantoulas. All rights reserved.
+
   This is a Lean implementation of the Sieve of Eratosthenes with wheel factorization using the
   primes 2, 3, and 5.  The 8 coprime classes modulo 2*3*5=30 are bitpacked into a ByteArray whose
   entry k and offset i represent the number 30*k + r(i), r(i) being the i-th coprime class in
@@ -56,7 +58,7 @@ abbrev Nat.inc (j : Nat) :=
   | 29 => 2
   | _  => 1
 
-/-- Return AND mask for the offset corresponding to each class mod 30. -/
+/-- Return mask for the offset corresponding to each class mod 30. -/
 @[inline] private
 abbrev UInt8.toMask : UInt8 → UInt8
   |  1 => 254
@@ -87,7 +89,7 @@ def ByteArray.updateProgression (B : ByteArray) (i j N : Nat)
     starting from the multiple i². -/
 @[inline] private
 abbrev ByteArray.siftOut (B : ByteArray) (i n : Nat) :=
-  B.updateProgression i i n <|
+  B.updateProgression i i n
     fun x i ↦ x.toMask &&& i
 
 /-! Main sifting function: traverse B looking for already determined primes
