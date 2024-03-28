@@ -73,7 +73,7 @@ abbrev Nat.inc (j : Nat) :=
 
 /-- Return mask for the offset corresponding to each class mod 30. -/
 @[inline] private
-abbrev UInt8.toMask : UInt8 → UInt8
+abbrev Nat.toMask : Nat → UInt8
   |  1 => 254
   |  7 => 253
   | 11 => 251
@@ -89,11 +89,11 @@ abbrev UInt8.toMask : UInt8 → UInt8
       r is the mod 30 class of (i*j) representing the bit-offset in the entry. -/
 @[inline, specialize] private partial
 def ByteArray.updateProgression (B : ByteArray) (i j N : Nat)
-    (f : UInt8 → UInt8 → UInt8) : ByteArray :=
+    (f : Nat → UInt8 → UInt8) : ByteArray :=
   let p := i * j
   if p > N then B else
     let k := p / 30
-    let r := p % 30 |>.toUInt8
+    let r := p % 30
     let J := j + j.inc
     B.set! k (f r <| B.get! k)
     |>.updateProgression i J N f
